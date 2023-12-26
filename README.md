@@ -1,7 +1,7 @@
 # Python Timelapse Recorder
 ## Timelapse screen recorder made using Python
 
-This project is a simple timelapse screen recorder made using PySimpleGUI, Pillow and MoviePy.
+This project is a simple timelapse screen recorder made using PySimpleGUI, Pillow and MoviePy. I captures your screen after a fixed interval (in seconds) and can also render the captured images as a video file.
 
 ## Setup and run
 
