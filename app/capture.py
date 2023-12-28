@@ -1,9 +1,10 @@
 import time
 import os
-import numpy as np
 from datetime import datetime
 from PIL import ImageGrab, Image
 from moviepy.editor import ImageSequenceClip
+from moviepy.video.fx.resize import resize
+from natsort import natsorted
 
 class Capture:
 	def __init__(self) -> None:
@@ -40,15 +41,11 @@ class Capture:
 		self.recording = False
 	
 	def render(self, input_path: str, resolution: tuple[int, int], fps: int, path: str) -> None:
-		images = [file for file in os.listdir(input_path) if file.endswith((".png"))]
-		frames = []
+		files = [file for file in os.listdir(input_path) if file.endswith((".png"))]
+		frames = natsorted(list(map(lambda frame: os.path.realpath(os.path.join(input_path, frame)), files)))
 		destination = os.path.realpath(f"{path}/Capture-{datetime.now().time()}.mp4")
-
-		for image in images:
-			with Image.open(os.path.realpath(os.path.join(input_path, image))) as frame:
-				frame = np.array(frame.resize(size=resolution))
-				frames.append(frame)
 		
 		if len(frames) > 0:
 			clip = ImageSequenceClip(sequence=frames, fps=fps)
-			clip.write_videofile(filename=destination, fps=fps, codec="libx264")
+			resize(clip, resolution)
+			clip.write_videofile(filename=destination, fps=fps, codec="libx264", preset="superfast")
